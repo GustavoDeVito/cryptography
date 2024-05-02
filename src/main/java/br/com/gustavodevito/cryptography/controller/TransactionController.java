@@ -4,6 +4,8 @@ import br.com.gustavodevito.cryptography.controller.dto.CreateTransactionRequest
 import br.com.gustavodevito.cryptography.controller.dto.TransactionResponse;
 import br.com.gustavodevito.cryptography.controller.dto.UpdateTransactionRequest;
 import br.com.gustavodevito.cryptography.service.TransactionService;
+import jakarta.validation.Valid;
+
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,8 +21,9 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<TransactionResponse>> listAll(@RequestParam(name = "page", defaultValue = "0") Integer page,
-                                                             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
+    public ResponseEntity<Page<TransactionResponse>> listAll(
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize) {
         var body = service.listAll(page, pageSize);
         return ResponseEntity.ok(body);
     }
@@ -32,14 +35,14 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody CreateTransactionRequest request) {
+    public ResponseEntity<Void> create(@Valid @RequestBody CreateTransactionRequest request) {
         service.create(request);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable(value = "id") Long id,
-                                       @RequestBody UpdateTransactionRequest request) {
+            @Valid @RequestBody UpdateTransactionRequest request) {
         service.update(id, request);
         return ResponseEntity.noContent().build();
     }
